@@ -165,7 +165,7 @@ class Deb::S3::CLI < Thor
       if options[:lock]
         log("Checking for existing lock file")
         log("Locking repository for updates")
-        Deb::S3::Lock.lock(options[:codename], component, options[:arch], options[:cache_control])
+        Deb::S3::Lock.lock(options[:codename])
         @lock_acquired = true
       end
 
@@ -253,7 +253,7 @@ class Deb::S3::CLI < Thor
       log("Update complete.")
     ensure
       if options[:lock] && @lock_acquired
-        Deb::S3::Lock.unlock(options[:codename], component, options[:arch], options[:cache_control])
+        Deb::S3::Lock.unlock(options[:codename])
         log("Lock released.")
       end
     end
@@ -402,7 +402,7 @@ class Deb::S3::CLI < Thor
       if options[:lock]
         log("Checking for existing lock file")
         log("Locking repository for updates")
-        Deb::S3::Lock.lock(options[:codename], to_component, options[:arch], options[:cache_control])
+        Deb::S3::Lock.lock(options[:codename])
         @lock_acquired = true
       end
 
@@ -444,7 +444,7 @@ class Deb::S3::CLI < Thor
       log "Copy complete."
     ensure
       if options[:lock] && @lock_acquired
-        Deb::S3::Lock.unlock(options[:codename], component, options[:arch], options[:cache_control])
+        Deb::S3::Lock.unlock(options[:codename])
         log("Lock released.")
       end
     end
@@ -497,7 +497,7 @@ class Deb::S3::CLI < Thor
       if options[:lock]
         log("Checking for existing lock file")
         log("Locking repository for updates")
-        Deb::S3::Lock.lock(options[:codename], component, options[:arch], options[:cache_control])
+        Deb::S3::Lock.lock(options[:codename])
         @lock_acquired = true
       end
 
@@ -545,7 +545,7 @@ class Deb::S3::CLI < Thor
       end
     ensure
       if options[:lock] && @lock_acquired
-        Deb::S3::Lock.unlock(options[:codename], component, options[:arch], options[:cache_control])
+        Deb::S3::Lock.unlock(options[:codename])
         log("Lock released.")
       end
     end
@@ -611,7 +611,7 @@ class Deb::S3::CLI < Thor
       if options[:lock]
         log("Checking for existing lock file")
         log("Locking repository for updates")
-        Deb::S3::Lock.lock(options[:codename], component, options[:arch], options[:cache_control])
+        Deb::S3::Lock.lock(options[:codename])
         @lock_acquired = true
       end
 
@@ -675,7 +675,7 @@ class Deb::S3::CLI < Thor
       end
     ensure
       if options[:lock] && @lock_acquired
-        Deb::S3::Lock.unlock(options[:codename], component, options[:arch], options[:cache_control])
+        Deb::S3::Lock.unlock(options[:codename])
         log("Lock released.")
       end
     end
