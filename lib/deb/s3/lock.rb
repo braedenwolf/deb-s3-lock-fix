@@ -3,6 +3,8 @@ require "securerandom"
 require "etc"
 
 class Deb::S3::Lock
+  attr_reader :user, :host_with_uuid
+
   DYNAMODB_TABLE_NAME = 'deb-s3-lock'
 
   def initialize(user, host_with_uuid)
@@ -16,13 +18,13 @@ class Deb::S3::Lock
       Aws::DynamoDB::Client.new(
         access_key_id: ENV['DEB_S3_LOCK_ACCESS_KEY_ID'],
         secret_access_key: ENV['DEB_S3_LOCK_SECRET_ACCESS_KEY'],
-        region: ENV['AWS_REGION']
+        region: ENV['AWS_BUILDERS_REGION']
       )
     end
   end
 
   def self.validate_environment_variables!
-    %w[DEB_S3_LOCK_ACCESS_KEY_ID DEB_S3_LOCK_SECRET_ACCESS_KEY AWS_REGION].each do |var|
+    %w[DEB_S3_LOCK_ACCESS_KEY_ID DEB_S3_LOCK_SECRET_ACCESS_KEY AWS_BUILDERS_REGION].each do |var|
       raise "Environment variable #{var} not set." unless ENV[var]
     end
   end
@@ -32,6 +34,8 @@ class Deb::S3::Lock
       uuid = SecureRandom.uuid
       lock_body = "#{Etc.getlogin}@#{Socket.gethostname}-#{uuid}"
       lock_key = codename
+
+      $stderr.puts("Current job's hostname with UUID: #{lock_body}")
 
       max_attempts.times do |i|
         wait_interval = [2**i, max_wait_interval].min
@@ -52,13 +56,10 @@ class Deb::S3::Lock
           $stderr.puts("[#{current_time}] Repository is locked by another user: #{lock_holder.user} at host #{lock_holder.host_with_uuid}")
           $stderr.puts("Attempting to obtain a lock after #{wait_interval} second(s).")
           sleep(wait_interval)
-        rescue => e
-          $stderr.puts("Unexpected error: #{e.message}")
-          sleep(wait_interval)
         end
       end
 
-      raise "Unable to obtain a lock after #{max_attempts}, giving up."
+      raise "Unable to obtain a lock after #{max_attempts} attemtps, giving up."
     end
 
     def unlock(codename)

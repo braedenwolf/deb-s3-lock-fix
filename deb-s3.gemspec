@@ -3,7 +3,7 @@ require "deb/s3"
 
 Gem::Specification.new do |gem|
   gem.name        = "deb-s3-lock-fix"
-  gem.version     = "#{Deb::S3::VERSION}.fix3"
+  gem.version     = "#{Deb::S3::VERSION}.fix7"
 
   gem.author      = "Braeden Wolf & Ken Robertson"
   gem.email       = "braedenwolf@outlook.com & ken@invalidlogic.com"

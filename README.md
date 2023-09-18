@@ -1,8 +1,18 @@
-# deb-s3
+# deb-s3-lock-fix
 
 [![Build Status](https://travis-ci.org/deb-s3/deb-s3.svg?branch=master)](https://travis-ci.org/deb-s3/deb-s3)
 
-**This repository is a fork of [krobertson/deb-s3](https://github.com/krobertson/deb-s3).**
+**This repository is a fork of [deb-s3](https://github.com/deb-s3/deb-s3).**
+
+Note: The locking mechanism in the original deb-s3 library does not prevent race conditions.
+It relies on S3 for distributed locking, which will not work consistently due to S3's eventual
+consistency model. This fork uses DynamoDB for distributed locking, since it ensures atomic
+conditional put operations on the lock.
+
+To use this library create a DynamoDB table and export the following three env variables:
+`DEB_S3_LOCK_ACCESS_KEY_ID`
+`DEB_S3_LOCK_SECRET_ACCESS_KEY`
+`AWS_BUILDERS_REGION`
 
 `deb-s3` is a simple utility to make creating and managing APT repositories on
 S3.

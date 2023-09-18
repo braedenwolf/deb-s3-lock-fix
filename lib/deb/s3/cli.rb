@@ -242,13 +242,17 @@ class Deb::S3::CLI < Thor
       log("Uploading packages and new manifests to S3")
       manifests.each_value do |manifest|
         begin
-          manifest.write_to_s3 { |f| sublog("Transferring #{f}") }
+          manifest.write_to_s3 do |f|
+            sublog("Transferring #{f} at #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}")
+          end
         rescue Deb::S3::Utils::AlreadyExistsError => e
           error("Uploading manifest failed because: #{e}")
         end
         release.update_manifest(manifest)
       end
-      release.write_to_s3 { |f| sublog("Transferring #{f}") }
+      release.write_to_s3 do |f|
+        sublog("Transferring #{f} at #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}")
+      end
 
       log("Update complete.")
     ensure
